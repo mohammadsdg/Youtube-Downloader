@@ -1,77 +1,156 @@
-YouTube Video Downloader (Backend API)
-This is a Python-based Flask application that serves as a backend API for a YouTube video downloader. It uses the yt-dlp library to fetch video information and download videos based on user requests.
+# YouTube-Downloader
 
-Features
-API-driven: Exposes RESTful API endpoints for interaction.
+A Python-based backend API for downloading YouTube videos, built using Flask and yt-dlp.
 
-Video Information: The /formats endpoint allows you to retrieve a list of all available video and audio formats for a given YouTube URL.
+## 🚀 Features
 
-Video Download: The /download endpoint initiates the video download to the server, supporting specific formats or a target resolution (e.g., 720p).
+- **API-Driven**: Exposes RESTful API endpoints for interaction.
+- **Video Information**: Retrieve a list of all available video and audio formats for a given YouTube URL.
+- **Video Download**: Initiate video downloads to the server, supporting specific formats or target resolutions (e.g., 720p).
+- **File Serving**: Serve the downloaded video file to the client.
 
-File Serving: The /download_file endpoint serves the downloaded video file to the client.
+## 📦 Requirements
 
-Requirements
-To run this application, you need to have Python 3.x and the following libraries installed:
+To run this application, ensure you have Python 3.x installed, along with the following libraries:
 
-Flask
+- `Flask`
+- `yt-dlp`
 
-yt-dlp
+You can install them using pip:
 
-Setup and Installation
-Save your Flask code as a file named app.py.
-
-Open your terminal or command prompt.
-
-Install the required Python packages using pip:
-
+```bash
 pip install Flask yt-dlp
+```
 
-Run the Flask application by executing the script:
+## ⚙️ Setup and Installation
 
-python app.py
+1. Clone the repository:
 
-The server will start and be accessible at http://127.0.0.1:5000. It will also automatically create a downloads folder to store the videos.
+   ```bash
+   git clone https://github.com/mohammadsdg/Youtube-Downloader.git
+   cd Youtube-Downloader
+   ```
 
-API Endpoints
-This application exposes three main API endpoints that you can call with tools like cURL or Postman.
+2. Install the required dependencies:
 
-1. Get Available Formats (/formats)
-   Method: POST
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Description: Retrieves a list of all available formats and resolutions for a video.
+3. Run the Flask application:
 
-Request Body (JSON):
+   ```bash
+   python app.py
+   ```
 
+The application will start running on `http://127.0.0.1:5000/`.
+
+## 🧪 API Endpoints
+
+### `GET /formats`
+
+Retrieve a list of all available video and audio formats for a given YouTube URL.
+
+**Parameters:**
+
+- `url` (required): The YouTube video URL.
+
+**Example Request:**
+
+```bash
+curl "http://127.0.0.1:5000/formats?url=https://www.youtube.com/watch?v=example"
+```
+
+**Response:**
+
+```json
 {
-"url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+  "formats": [
+    {
+      "format": "22",
+      "resolution": "720p",
+      "extension": "mp4",
+      "audio": true,
+      "video": true
+    },
+    {
+      "format": "18",
+      "resolution": "360p",
+      "extension": "mp4",
+      "audio": true,
+      "video": true
+    }
+  ]
 }
+```
 
-2. Download Video (/download)
-   Method: POST
+### `GET /download`
 
-Description: Downloads the video to the server. You can specify a format_id or a resolution. If neither is provided, it downloads the best available quality.
+Initiate the download of a video.
 
-Request Body (JSON):
+**Parameters:**
 
+- `url` (required): The YouTube video URL.
+- `format` (optional): The desired format ID.
+- `resolution` (optional): The desired resolution (e.g., `720p`).
+
+**Example Request:**
+
+```bash
+curl "http://127.0.0.1:5000/download?url=https://www.youtube.com/watch?v=example&resolution=720p"
+```
+
+**Response:**
+
+```json
 {
-"url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-"resolution": 720
+  "message": "Download started successfully."
 }
+```
 
-Example cURL Command:
+### `GET /download_file`
 
-curl -X POST \
- -H "Content-Type: application/json" \
- -d '{"url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "resolution": 720}' \
- http://127.0.0.1:5000/download
+Serve the downloaded video file to the client.
 
-3. Download File (/download_file)
-   Method: GET
+**Parameters:**
 
-Description: Serves the downloaded file to the client. This endpoint is meant to be called after a successful download, using the file_path returned from the /download endpoint.
+- `filename` (required): The name of the downloaded file.
 
-Request Parameters: file_path (string)
+**Example Request:**
 
-Example cURL Command:
+```bash
+curl "http://127.0.0.1:5000/download_file?filename=example_video.mp4" --output example_video.mp4
+```
 
-curl -o "video.mp4" "http://127.0.0.1:5000/download_file?file_path=downloads%2FA_Downloaded_Video.mp4"
+**Response:**
+The video file will be downloaded to the client's machine.
+
+## 🧩 Example Usage
+
+1. Use the `/formats` endpoint to check available formats for a video:
+
+   ```bash
+   curl "http://127.0.0.1:5000/formats?url=https://www.youtube.com/watch?v=example"
+   ```
+
+2. Choose a desired format and resolution.
+
+3. Use the `/download` endpoint to start the download:
+
+   ```bash
+   curl "http://127.0.0.1:5000/download?url=https://www.youtube.com/watch?v=example&resolution=720p"
+   ```
+
+4. Once the download is complete, use the `/download_file` endpoint to retrieve the video:
+
+   ```bash
+   curl "http://127.0.0.1:5000/download_file?filename=example_video.mp4" --output example_video.mp4
+   ```
+
+## 🛠️ Development & Contributions
+
+Feel free to fork the repository, submit issues, and send pull requests. Contributions are welcome!
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
